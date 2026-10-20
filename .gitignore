@@ -1,0 +1,90 @@
+# ==============================================================================
+# JavaScript / Node.js
+# ==============================================================================
+
+# Build artifacts
+.next/
+.nuxt/
+.parcel-cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+.serverless/
+.storybook-out/
+.storybook-static/
+build/
+build/Release/
+dist/
+lib-cov/
+out/
+storybook-static/
+
+# Dependency management and package caches
+.bower-cache/
+.bower-components/
+.bower-registry/
+.bower-tmp/
+.bun/
+.deno/
+.jpm/
+.npm/
+.pnp.*
+.pnpm-store/
+.web_modules/
+.yarn-integrity
+.yarn/
+.yarn/cache/
+.yarn/install-state.gz
+.yarn/unplugged/
+.yarn/versions/
+bower_components/
+jspm_packages/
+node_modules/
+web_modules/
+
+# Development and runtime artifacts
+*.log
+.log.
+*.pid
+*.pid.lock
+.eslintcache
+.grunt
+.lock-wscript
+.node_repl_history
+.npm-debug.log*
+.pnpm-debug.log*
+.stylelintcache
+.turbo/
+.vite/
+.vscode-test/
+npm-debug.log*
+pids/
+yarn-debug.log*
+yarn-error.log*
+
+# Language-specific files
+.tern-port
+
+# Testing and quality assurance
+.coverage
+.coverage.*
+.nyc_output/
+coverage/
+test-output/
+test-reports/
+test-results/
+
+# Environment files and credentials
+.env
+.env.*
+!.env.example
+*.local
+*.pem
+*.key
+credentials/
+secrets/
+
+# Operating system and editor files
+.DS_Store
+Thumbs.db
+.idea/
