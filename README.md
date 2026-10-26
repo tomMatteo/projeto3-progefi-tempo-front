@@ -30,3 +30,23 @@ O banco de dados será o MongoDB hospedado no MongoDB Atlas.
 - Recomendação de roupas para cada dia.
 - Lista de peças da mala.
 - Integração com a API Flask por meio de variáveis de ambiente.
+
+## Executando o cliente
+
+Instale as dependências e inicie o servidor de desenvolvimento:
+
+```bash
+npm install
+npm run dev
+```
+
+Para conectar o formulário ao servidor Flask, crie um arquivo `.env` (que não
+deve ser commitado) a partir do exemplo abaixo:
+
+```bash
+VITE_API_URL=http://localhost:5000
+```
+
+O formulário envia um novo roteiro para `POST ${VITE_API_URL}/roteiros`, com
+as datas e endereços dos destinos e as quantidades separadas de calças,
+camisetas, shorts e agasalhos.
