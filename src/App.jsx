@@ -103,8 +103,38 @@ function App() {
   }
 
   function updateClothing(type, value) {
-    setClothing((current) => ({ ...current, [type]: value }))
+    if (value === '') {
+      setClothing((current) => ({ ...current, [type]: '' }))
+      return
+    }
+
+    const parsedValue = Number(value)
+    if (Number.isNaN(parsedValue)) return
+
+    setClothing((current) => ({
+      ...current,
+      [type]: Math.max(0, Math.min(100, parsedValue)),
+    }))
   }
+
+  function changeClothing(type, amount) {
+    setClothing((current) => ({
+      ...current,
+      [type]: Math.max(0, Math.min(100, Number(current[type] || 0) + amount)),
+    }))
+  }
+
+  function normalizeClothing(type) {
+    setClothing((current) => ({
+      ...current,
+      [type]: current[type] === '' ? 0 : current[type],
+    }))
+  }
+
+  const totalClothing = Object.values(clothing).reduce(
+    (total, amount) => total + Number(amount),
+    0,
+  )
 
   return (
     <main className="app-shell">
@@ -162,18 +192,42 @@ function App() {
               ].map(([type, label]) => (
                 <label className="clothing-field" key={type}>
                   <span>{label}</span>
-                  <input
-                    type="number"
-                    min="0"
-                    max="100"
-                    value={clothing[type]}
-                    onChange={(event) => updateClothing(type, event.target.value)}
-                    required
-                  />
-                  <small>peças</small>
+                  <div className="quantity-control">
+                    <button
+                      type="button"
+                      aria-label={`Diminuir quantidade de ${label}`}
+                      onClick={() => changeClothing(type, -1)}
+                      disabled={Number(clothing[type]) === 0}
+                    >
+                      −
+                    </button>
+                    <input
+                      className="quantity-input"
+                      type="number"
+                      min="0"
+                      max="100"
+                      aria-label={`Quantidade de ${label}`}
+                      value={clothing[type]}
+                      onChange={(event) => updateClothing(type, event.target.value)}
+                      onBlur={() => normalizeClothing(type)}
+                      required
+                    />
+                    <button
+                      type="button"
+                      aria-label={`Aumentar quantidade de ${label}`}
+                      onClick={() => changeClothing(type, 1)}
+                      disabled={Number(clothing[type]) === 100}
+                    >
+                      +
+                    </button>
+                  </div>
                 </label>
               ))}
             </div>
+            <p className={`clothing-summary${totalClothing === 0 ? ' empty' : ''}`}>
+              {totalClothing} {totalClothing === 1 ? 'peça' : 'peças'} para{' '}
+              {destinations.length} {destinations.length === 1 ? 'dia' : 'dias'}
+            </p>
 
             <div className="section-heading destination-heading">
               <div className="step-number">02</div>
@@ -188,7 +242,7 @@ function App() {
                 <div className="destination-card" key={index}>
                   <div className="day-badge">DIA {String(index + 1).padStart(2, '0')}</div>
                   <div className="destination-fields">
-                    <label className="field">
+                    <label className="field date-field">
                       <span>Data</span>
                       <input
                         type="date"
@@ -230,7 +284,11 @@ function App() {
 
             <div className="form-actions">
               {status === 'error' && <p className="feedback error">{errorMessage}</p>}
-              <button className="submit-button" type="submit" disabled={status === 'loading'}>
+              <button
+                className="submit-button"
+                type="submit"
+                disabled={status === 'loading' || totalClothing < 1}
+              >
                 {status === 'loading' ? 'Salvando...' : 'Gerar recomendações'}
                 <span>→</span>
               </button>
