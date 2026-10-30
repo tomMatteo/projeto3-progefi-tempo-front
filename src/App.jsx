@@ -35,6 +35,8 @@ function App() {
   const [destinations, setDestinations] = useState([{ ...initialDestination }])
   const [status, setStatus] = useState('idle')
   const [errorMessage, setErrorMessage] = useState('')
+  const [averageTemp, setAverageTemp] = useState(22)
+  const [plan, setPlan] = useState(null)
 
   function updateDestination(index, field, value) {
     setDestinations((current) => {
@@ -65,17 +67,9 @@ function App() {
   async function submitTrip(event) {
     event.preventDefault()
     setErrorMessage('')
+    setPlan(null)
 
     const apiUrl = import.meta.env.VITE_API_URL
-    const payload = {
-      roupas: Object.fromEntries(
-        Object.entries(clothing).map(([type, amount]) => [type, Number(amount)]),
-      ),
-      destinos: destinations.map((destination) => ({
-        data: destination.date,
-        localizacao: destination.address,
-      })),
-    }
 
     if (!apiUrl) {
       setStatus('error')
@@ -83,18 +77,37 @@ function App() {
       return
     }
 
+    const payload = {
+      clothes: {
+        't-shirt': Number(clothing.camisetas) || 0,
+        'long-sleeve': 0,
+        pants: Number(clothing.calcas) || 0,
+        shorts: Number(clothing.shorts) || 0,
+        coat: Number(clothing.agasalhos) || 0,
+        'heavy-coat': 0,
+        'second-skin': 0,
+        gloves: 0,
+      },
+      itinerary: Object.fromEntries(
+        destinations.map((d) => [d.date, d.address]),
+      ),
+      average_temp: Number(averageTemp),
+    }
+
     setStatus('loading')
     try {
-      const response = await fetch(`${apiUrl.replace(/\/$/, '')}/roteiros`, {
+      const response = await fetch(`${apiUrl.replace(/\/$/, '')}/plan`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       })
+      const data = await response.json().catch(() => ({}))
 
       if (!response.ok) {
-        throw new Error('Não foi possível salvar o roteiro.')
+        throw new Error(data.error || 'Não foi possível salvar o roteiro.')
       }
 
+      setPlan(data)
       setStatus('success')
     } catch (error) {
       setStatus('error')
@@ -229,6 +242,17 @@ function App() {
               {destinations.length} {destinations.length === 1 ? 'dia' : 'dias'}
             </p>
 
+            <label className="field">
+              <span>Temperatura em que você se sente confortável: {averageTemp}°C</span>
+              <input
+                type="range"
+                min="0"
+                max="35"
+                value={averageTemp}
+                onChange={(event) => setAverageTemp(Number(event.target.value))}
+              />
+            </label>
+
             <div className="section-heading destination-heading">
               <div className="step-number">02</div>
               <div>
@@ -294,6 +318,25 @@ function App() {
               </button>
             </div>
           </form>
+
+          {plan && (
+            <section className="preview-card">
+              <h3>Recomendações</h3>
+              {Object.entries(plan).map(([date, { outfit, notes }]) => (
+                <div key={date}>
+                  <strong>{date.split('-').reverse().join('/')}</strong>
+                  <ul>
+                    {Object.entries(outfit).map(([piece, count]) => (
+                      <li key={piece}>{count}× {piece}</li>
+                    ))}
+                  </ul>
+                  {notes.map((note, i) => (
+                    <p key={i} className="feedback">{note}</p>
+                  ))}
+                </div>
+              ))}
+            </section>
+          )}
 
           <aside className="preview-card">
             <div className="preview-top">
