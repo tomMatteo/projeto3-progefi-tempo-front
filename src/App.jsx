@@ -105,7 +105,7 @@ function App() {
 
       if (!response.ok) {
         throw new Error(
-          response.status === 404
+          response.status === 400
             ? 'Não achamos esse endereço.'
             : 'Não foi possível consultar a previsão.',
         )
@@ -344,25 +344,6 @@ function App() {
             </div>
           </form>
 
-          {plan && (
-            <section className="preview-card">
-              <h3>Recomendações</h3>
-              {Object.entries(plan).map(([date, { outfit, notes }]) => (
-                <div key={date}>
-                  <strong>{date.split('-').reverse().join('/')}</strong>
-                  <ul>
-                    {Object.entries(outfit).map(([piece, count]) => (
-                      <li key={piece}>{count}× {piece}</li>
-                    ))}
-                  </ul>
-                  {notes.map((note, i) => (
-                    <p key={i} className="feedback">{note}</p>
-                  ))}
-                </div>
-              ))}
-            </section>
-          )}
-
           <aside className="preview-card">
             <div className="preview-top">
               <span className="preview-label">PRÉVIA DO ROTEIRO</span>
@@ -393,6 +374,25 @@ function App() {
             </div>
           </aside>
         </div>
+
+        {plan && (
+          <section className="results-card">
+            <h3>Recomendações</h3>
+            {Object.entries(plan).map(([date, { outfit, notes }]) => (
+              <div className="result-day" key={date}>
+                <strong>{date.split('-').reverse().join('/')}</strong>
+                <ul>
+                  {Object.entries(outfit).map(([piece, count]) => (
+                    <li key={piece}>{count}×{piece}</li>
+                  ))}
+                </ul>
+                {notes.map((note, i) => (
+                  <p key={i} className="feedback">{note}</p>
+                ))}
+              </div>
+            ))}
+          </section>
+        )}
       </section>
     </main>
   )

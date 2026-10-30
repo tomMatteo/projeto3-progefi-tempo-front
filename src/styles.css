@@ -159,3 +159,8 @@ input::placeholder { color: #b8b8ca; }
 @media (max-width: 650px) {
   .app-shell { display: block; }.sidebar { position: relative; height: auto; min-height: 0; padding: 24px; }.sidebar-copy { margin-top: 32px; }.sidebar-copy .eyebrow, .sidebar-copy > p:last-child, .weather-orbit, .sidebar-footer { display: none; }.sidebar h1 { margin: 0; font-size: 33px; letter-spacing: -1px; }.content { width: 100%; padding: 28px 20px 40px; }.topbar { margin-bottom: 34px; }.profile { display: none; }.clothing-grid { grid-template-columns: 1fr 1fr; gap: 10px; }.destination-fields { grid-template-columns: 1fr; gap: 0; }.clothing-field { min-height: 115px; }.destination-card { gap: 10px; padding-left: 12px; }.day-badge { display: none; }.add-day-button { margin-left: 0; }.form-actions { align-items: flex-start; flex-direction: column; }.submit-button { width: 100%; justify-content: space-between; }
 }
+
+.results-card { max-width: 970px; margin-top: 32px; padding: 24px; border-radius: 16px; background: rgba(255, 255, 255, .06); color: #d3d0ea; }
+.results-card h3 { margin: 0 0 16px; color: #fff; font-family: Outfit, sans-serif; }
+.result-day { padding: 12px 0; border-top: 1px solid rgba(255, 255, 255, .1); }
+.result-day ul { margin: 8px 0; padding-left: 18px; }

@@ -47,6 +47,6 @@ deve ser commitado) a partir do exemplo abaixo:
 VITE_API_URL=http://localhost:5000
 ```
 
-O formulário envia um novo roteiro para `POST ${VITE_API_URL}/roteiros`, com
+O formulário envia um novo roteiro para `POST ${VITE_API_URL}/plan`, com
 as datas e endereços dos destinos e as quantidades separadas de calças,
 camisetas, shorts e agasalhos.
