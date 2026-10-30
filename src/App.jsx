@@ -73,7 +73,7 @@ function App() {
 
     if (!apiUrl) {
       setStatus('error')
-      setErrorMessage('Configure VITE_API_URL para salvar o roteiro na API.')
+      setErrorMessage('Não foi possível consultar a previsão.')
       return
     }
 
@@ -104,14 +104,22 @@ function App() {
       const data = await response.json().catch(() => ({}))
 
       if (!response.ok) {
-        throw new Error(data.error || 'Não foi possível salvar o roteiro.')
+        throw new Error(
+          response.status === 404
+            ? 'Não achamos esse endereço.'
+            : 'Não foi possível consultar a previsão.',
+        )
       }
 
       setPlan(data)
       setStatus('success')
     } catch (error) {
       setStatus('error')
-      setErrorMessage(error.message)
+      setErrorMessage(
+        error instanceof Error && error.message === 'Não achamos esse endereço.'
+          ? error.message
+          : 'Não foi possível consultar a previsão.',
+      )
     }
   }
 
@@ -148,6 +156,11 @@ function App() {
     (total, amount) => total + Number(amount),
     0,
   )
+  const isFormValid =
+    totalClothing > 0 &&
+    destinations.every(
+      (destination) => destination.date && destination.address.trim(),
+    )
 
   return (
     <main className="app-shell">
@@ -311,10 +324,22 @@ function App() {
               <button
                 className="submit-button"
                 type="submit"
-                disabled={status === 'loading' || totalClothing < 1}
+                disabled={status === 'loading' || !isFormValid}
               >
-                {status === 'loading' ? 'Salvando...' : 'Gerar recomendações'}
-                <span>→</span>
+                {status === 'loading' ? (
+                  <>
+                    <span className="loading-label">
+                      <span className="spinner" aria-hidden="true" />
+                      Consultando previsão…
+                    </span>
+                    <span aria-hidden="true">→</span>
+                  </>
+                ) : (
+                  <>
+                    Gerar recomendações
+                    <span aria-hidden="true">→</span>
+                  </>
+                )}
               </button>
             </div>
           </form>
