@@ -33,20 +33,60 @@ O banco de dados será o MongoDB hospedado no MongoDB Atlas.
 
 ## Executando o cliente
 
-Instale as dependências e inicie o servidor de desenvolvimento:
+Pré-requisito: Node.js 18 ou superior.
 
-```bash
-npm install
-npm run dev
+1. Suba o servidor Flask ([projeto3-progefi-tempo-back](https://github.com/tomMatteo/projeto3-progefi-tempo-back)).
+   Por padrão ele roda em `http://localhost:5000` e só aceita requisições
+   vindas de `http://localhost:5173`.
+2. Crie o arquivo `.env` a partir do exemplo (o `.env` não deve ser commitado):
+
+   ```bash
+   cp .env.example .env
+   ```
+
+3. Instale as dependências e inicie o servidor de desenvolvimento:
+
+   ```bash
+   npm install
+   npm run dev
+   ```
+
+4. Acesse `http://localhost:5173`.
+
+## Integração com a API
+
+Ao clicar em **Gerar recomendações**, o formulário envia
+`POST ${VITE_API_URL}/plan` com o corpo:
+
+```json
+{
+  "clothes": {
+    "t-shirt": 3, "long-sleeve": 0, "pants": 1, "shorts": 2,
+    "coat": 1, "heavy-coat": 0, "second-skin": 0, "gloves": 0
+  },
+  "itinerary": { "2026-11-02": "Av. Paulista, 1578, São Paulo" },
+  "average_temp": 22
+}
 ```
 
-Para conectar o formulário ao servidor Flask, crie um arquivo `.env` (que não
-deve ser commitado) a partir do exemplo abaixo:
+- `clothes`: quantidade de cada peça. Hoje o formulário só preenche camisetas
+  (`t-shirt`), calças (`pants`), shorts e agasalhos (`coat`); as demais vão
+  como `0`.
+- `itinerary`: data (`AAAA-MM-DD`) → endereço do destino naquele dia.
+- `average_temp`: temperatura em que o usuário se sente confortável (°C).
 
-```bash
-VITE_API_URL=http://localhost:5000
+A resposta traz a recomendação de cada dia, em ordem de data:
+
+```json
+{
+  "2026-11-02": {
+    "outfit": { "t-shirt": 1, "shorts": 1 },
+    "notes": []
+  }
+}
 ```
 
-O formulário envia um novo roteiro para `POST ${VITE_API_URL}/plan`, com
-as datas e endereços dos destinos e as quantidades separadas de calças,
-camisetas, shorts e agasalhos.
+Em caso de erro, a API responde `400` (dados inválidos ou endereço não
+encontrado) ou `502` (Nominatim ou Open-Meteo fora do ar). A interface mostra
+"Não achamos esse endereço." para o `400` e uma mensagem genérica para os
+demais.
