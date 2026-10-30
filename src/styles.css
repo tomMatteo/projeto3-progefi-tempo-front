@@ -20,10 +20,11 @@ button { cursor: pointer; }
 }
 
 .sidebar {
-  position: relative;
+  position: sticky;
+  top: 0;
   display: flex;
-  flex: 0 0 35%;
-  min-height: 100vh;
+  flex: 0 0 28%;
+  height: 100vh;
   flex-direction: column;
   overflow: hidden;
   padding: 46px clamp(35px, 5vw, 82px);
@@ -80,7 +81,7 @@ button { cursor: pointer; }
 .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #61d4a7; box-shadow: 0 0 10px #61d4a7; }
 
 .content {
-  width: 65%;
+  width: 72%;
   min-width: 0;
   padding: 47px clamp(30px, 5vw, 84px) 60px;
   background: linear-gradient(145deg, rgba(22, 27, 73, .94), rgba(69, 40, 128, .82));
@@ -134,7 +135,9 @@ input::placeholder { color: #b8b8ca; }
 .add-day-button:hover span { border-color: #f5c438; background: rgba(245,196,56,.14); transform: rotate(90deg); }
 .form-actions { display: flex; align-items: center; justify-content: flex-end; gap: 18px; border-top: 1px solid rgba(255,255,255,.16); padding-top: 25px; }
 .submit-button { display: flex; align-items: center; gap: 23px; border: 0; border-radius: 9px; padding: 14px 18px 14px 21px; color: #fff; background: #eab92f; box-shadow: 0 7px 16px rgba(234, 185, 47, .24); font-size: 12px; font-weight: 700; transition: .2s ease; }
-.submit-button:hover { background: #dcae29; transform: translateY(-1px); }.submit-button:disabled { cursor: wait; opacity: .7; }
+.submit-button:hover:not(:disabled) { background: #dcae29; transform: translateY(-1px); }.submit-button:disabled { cursor: not-allowed; opacity: .42; box-shadow: none; }
+.loading-label { display: inline-flex; align-items: center; gap: 9px; }.spinner { width: 13px; height: 13px; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: spin .75s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 .submit-button span { font-size: 20px; font-weight: 400; line-height: 12px; }
 .feedback { max-width: 260px; margin: 0; font-size: 11px; line-height: 1.4; }.feedback.error { color: #ba5165; }.feedback.success { color: #318b69; }
 .preview-card { align-self: start; border-radius: 17px; padding: 19px; color: #fff; background: linear-gradient(160deg, #222860, #5c329a); box-shadow: 0 20px 40px rgba(67, 45, 136, .16); }
@@ -146,13 +149,13 @@ input::placeholder { color: #b8b8ca; }
 .forecast-note { display: flex; align-items: center; gap: 8px; margin-top: 22px; border-radius: 9px; padding: 10px; background: rgba(255,255,255,.09); }.forecast-note span { font-size: 20px; }.forecast-note p { margin: 0; color: #d0cfe4; font-size: 9px; line-height: 1.4; }
 
 @media (max-width: 980px) {
-  .sidebar { flex-basis: 31%; padding: 35px 30px; }.content { width: 69%; padding: 35px 30px 45px; }.form-layout { grid-template-columns: 1fr; }.preview-card { display: none; }
+  .sidebar { flex-basis: 28%; padding: 35px 30px; }.content { width: 72%; padding: 35px 30px 45px; }.form-layout { grid-template-columns: 1fr; }.preview-card { display: none; }
 }
 @media (min-width: 981px) and (max-width: 1250px) {
-  .sidebar { flex-basis: 34%; padding-right: 35px; padding-left: 35px; }
-  .content { width: 66%; padding-right: 35px; padding-left: 35px; }
+  .sidebar { flex-basis: 30%; padding-right: 35px; padding-left: 35px; }
+  .content { width: 70%; padding-right: 35px; padding-left: 35px; }
   .form-layout { grid-template-columns: minmax(0, 1fr) 200px; gap: 24px; }
 }
 @media (max-width: 650px) {
-  .app-shell { display: block; }.sidebar { min-height: 260px; padding: 28px 24px; }.sidebar-copy { margin-top: 42px; }.sidebar h1 { margin: 10px 0; font-size: 33px; letter-spacing: -1px; }.sidebar-copy > p:last-child, .weather-orbit { display: none; }.sidebar-footer { margin-top: 28px; }.content { width: 100%; padding: 28px 20px 40px; }.topbar { margin-bottom: 34px; }.profile { display: none; }.clothing-grid { grid-template-columns: 1fr 1fr; gap: 10px; }.destination-fields { grid-template-columns: 1fr; gap: 0; }.clothing-field { min-height: 115px; }.destination-card { gap: 10px; padding-left: 12px; }.day-badge { display: none; }.add-day-button { margin-left: 0; }.form-actions { align-items: flex-start; flex-direction: column; }.submit-button { width: 100%; justify-content: space-between; }
+  .app-shell { display: block; }.sidebar { position: relative; height: auto; min-height: 0; padding: 24px; }.sidebar-copy { margin-top: 32px; }.sidebar-copy .eyebrow, .sidebar-copy > p:last-child, .weather-orbit, .sidebar-footer { display: none; }.sidebar h1 { margin: 0; font-size: 33px; letter-spacing: -1px; }.content { width: 100%; padding: 28px 20px 40px; }.topbar { margin-bottom: 34px; }.profile { display: none; }.clothing-grid { grid-template-columns: 1fr 1fr; gap: 10px; }.destination-fields { grid-template-columns: 1fr; gap: 0; }.clothing-field { min-height: 115px; }.destination-card { gap: 10px; padding-left: 12px; }.day-badge { display: none; }.add-day-button { margin-left: 0; }.form-actions { align-items: flex-start; flex-direction: column; }.submit-button { width: 100%; justify-content: space-between; }
 }
