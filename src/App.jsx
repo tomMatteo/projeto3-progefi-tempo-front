@@ -24,7 +24,8 @@ function App() {
   const today = new Date()
   const minimumDate = formatDateForInput(today)
   const maximumDateValue = new Date(today)
-  maximumDateValue.setDate(today.getDate() + 16)
+  // O Open-Meteo prevê 16 dias contando hoje, então o último dia é hoje + 15
+  maximumDateValue.setDate(today.getDate() + 15)
   const maximumDate = formatDateForInput(maximumDateValue)
   const [clothing, setClothing] = useState({
     calcas: 1,
@@ -156,8 +157,15 @@ function App() {
     (total, amount) => total + Number(amount),
     0,
   )
+  // O roteiro vai para a API como { data: endereço }, então cada data só pode aparecer uma vez
+  const repeatedDates = new Set(
+    destinations
+      .map((destination) => destination.date)
+      .filter((date, index, dates) => date && dates.indexOf(date) !== index),
+  )
   const isFormValid =
     totalClothing > 0 &&
+    repeatedDates.size === 0 &&
     destinations.every(
       (destination) => destination.date && destination.address.trim(),
     )
@@ -287,8 +295,12 @@ function App() {
                         max={maximumDate}
                         value={destination.date}
                         onChange={(event) => updateDestination(index, 'date', event.target.value)}
+                        aria-invalid={repeatedDates.has(destination.date)}
                         required
                       />
+                      {repeatedDates.has(destination.date) && (
+                        <em className="field-error">Já existe outro dia com essa data.</em>
+                      )}
                     </label>
                     <label className="field">
                       <span>Endereço do destino</span>
