@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { translateNote, translatePiece } from './translations'
 
 const initialDestination = {
   date: '',
@@ -383,11 +384,11 @@ function App() {
                 <strong>{date.split('-').reverse().join('/')}</strong>
                 <ul>
                   {Object.entries(outfit).map(([piece, count]) => (
-                    <li key={piece}>{count}×{piece}</li>
+                    <li key={piece}>{count} {translatePiece(piece, count)}</li>
                   ))}
                 </ul>
                 {notes.map((note, i) => (
-                  <p key={i} className="feedback">{note}</p>
+                  <p key={i} className="feedback">{translateNote(note)}</p>
                 ))}
               </div>
             ))}
