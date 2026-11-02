@@ -69,9 +69,8 @@ Ao clicar em **Gerar recomendações**, o formulário envia
 }
 ```
 
-- `clothes`: quantidade de cada peça. Hoje o formulário só preenche camisetas
-  (`t-shirt`), calças (`pants`), shorts e agasalhos (`coat`); as demais vão
-  como `0`.
+- `clothes`: quantidade de cada uma das 8 peças que a API reconhece. As 8
+  chaves precisam ser enviadas sempre, mesmo as que estiverem com `0`.
 - `itinerary`: data (`AAAA-MM-DD`) → endereço do destino naquele dia.
 - `average_temp`: temperatura em que o usuário se sente confortável (°C).
 
