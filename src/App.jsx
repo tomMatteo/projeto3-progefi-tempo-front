@@ -5,6 +5,18 @@ const initialDestination = {
   address: '',
 }
 
+// Peças da mala: chave no estado, rótulo na tela, nome esperado pela API e quantidade inicial
+const CLOTHING_TYPES = [
+  { type: 'camisetas', label: 'Camisetas', apiName: 't-shirt', initial: 3 },
+  { type: 'mangasLongas', label: 'Mangas longas', apiName: 'long-sleeve', initial: 0 },
+  { type: 'calcas', label: 'Calças', apiName: 'pants', initial: 1 },
+  { type: 'shorts', label: 'Shorts', apiName: 'shorts', initial: 2 },
+  { type: 'agasalhos', label: 'Agasalhos', apiName: 'coat', initial: 1 },
+  { type: 'casacosPesados', label: 'Casacos pesados', apiName: 'heavy-coat', initial: 0 },
+  { type: 'segundasPeles', label: 'Segundas peles', apiName: 'second-skin', initial: 0 },
+  { type: 'luvas', label: 'Luvas (pares)', apiName: 'gloves', initial: 0 },
+]
+
 function formatDateForInput(date) {
   const year = date.getFullYear()
   const month = String(date.getMonth() + 1).padStart(2, '0')
@@ -26,12 +38,9 @@ function App() {
   const maximumDateValue = new Date(today)
   maximumDateValue.setDate(today.getDate() + 16)
   const maximumDate = formatDateForInput(maximumDateValue)
-  const [clothing, setClothing] = useState({
-    calcas: 1,
-    camisetas: 3,
-    shorts: 2,
-    agasalhos: 1,
-  })
+  const [clothing, setClothing] = useState(() =>
+    Object.fromEntries(CLOTHING_TYPES.map(({ type, initial }) => [type, initial])),
+  )
   const [destinations, setDestinations] = useState([{ ...initialDestination }])
   const [status, setStatus] = useState('idle')
   const [errorMessage, setErrorMessage] = useState('')
@@ -78,16 +87,9 @@ function App() {
     }
 
     const payload = {
-      clothes: {
-        't-shirt': Number(clothing.camisetas) || 0,
-        'long-sleeve': 0,
-        pants: Number(clothing.calcas) || 0,
-        shorts: Number(clothing.shorts) || 0,
-        coat: Number(clothing.agasalhos) || 0,
-        'heavy-coat': 0,
-        'second-skin': 0,
-        gloves: 0,
-      },
+      clothes: Object.fromEntries(
+        CLOTHING_TYPES.map(({ type, apiName }) => [apiName, Number(clothing[type]) || 0]),
+      ),
       itinerary: Object.fromEntries(
         destinations.map((d) => [d.date, d.address]),
       ),
@@ -210,12 +212,7 @@ function App() {
             </div>
 
             <div className="clothing-grid">
-              {[
-                ['calcas', 'Calças'],
-                ['camisetas', 'Camisetas'],
-                ['shorts', 'Shorts'],
-                ['agasalhos', 'Agasalhos'],
-              ].map(([type, label]) => (
+              {CLOTHING_TYPES.map(({ type, label }) => (
                 <label className="clothing-field" key={type}>
                   <span>{label}</span>
                   <div className="quantity-control">
